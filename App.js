@@ -5,20 +5,22 @@ import './App.css'; // Import CSS file
 function App() {
   const [searchInput, setSearchInput] = useState('');
   const [meals, setMeals] = useState([]);
-  const [selectedMeal, setSelectedMeal] = useState(false);
+  const [selectedMeal, setSelectedMeal] = useState(null);
 
   const handleSearch = async () => {
-    // Replace the fetch call with a call to your API
     const response = await fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?i=${searchInput}`);
     const data = await response.json();
     setMeals(data.meals || []);
   };
 
   const handleMealClick = async (mealId) => {
-    // Replace the fetch call with a call to your API
     const response = await fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${mealId}`);
     const data = await response.json();
     setSelectedMeal(data.meals[0]);
+  };
+
+  const openMealModal = (meal) => {
+    setSelectedMeal(meal);
   };
 
   const closeMealModal = () => {
@@ -60,7 +62,7 @@ function App() {
       </div>
 
       {selectedMeal && (
-        <div className="meal-details-content">
+        <div className={`meal-details ${selectedMeal ? 'showRecipe' : ''}`}>
           <h2 className="recipe-title">{selectedMeal.strMeal}</h2>
           <p className="recipe-category">{selectedMeal.strCategory}</p>
           <div className="recipe-instruct">
